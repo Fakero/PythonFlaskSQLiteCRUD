@@ -43,7 +43,7 @@ def get_users_json():
     resp = Response(u, status=200, mimetype='application/json')
     return resp
 
-@app.route('/users/delete', methods = ['DELETE'])
+@app.route('/users/delete', methods = ['DELETE','POST'])
 def delete_user():
     user = request.get_json(force = True)
     dbconnection.sqlite_connection.init_app(app)
@@ -52,7 +52,7 @@ def delete_user():
     dbconnection.sqlite_connection.close_connection()
     return "Success!"
 
-@app.route('/users/<username>')
+@app.route('/users/test/<username>')
 def get_user(username):
     dbconnection.sqlite_connection.init_app(app)
     cursor = dbconnection.sqlite_connection.get_cursor()
@@ -61,9 +61,12 @@ def get_user(username):
     row = cursor.fetchone()
     return json.dumps({"id":row[0], "username":row[1], "password":row[2], "firstname":row[3], "lastname":row[4]}, indent=True)
 
-@app.route('/users/update', methods = ['PUT'])
+@app.route('/users/update', methods = ['PUT', 'POST'])
 def update_user():
-    user = request.get_json(force=True)
+    result = request.form
+    user = json.dumps(result.iteritems())
+
+    print(user)
     dbconnection.sqlite_connection.init_app(app)
     cursor = dbconnection.sqlite_connection.get_cursor()
     uname = str(user['username'])
@@ -73,8 +76,18 @@ def update_user():
     cursor.execute('''UPDATE Users SET Username = ?, Password = ?, Firstname = ?, Lastname = ? WHERE Id = ? ''', (uname, pword, fname, lname, user['id']))
     dbconnection.sqlite_connection.commit()
     dbconnection.sqlite_connection.close_connection()
-    return json.dumps(user, indent=True)
+    return redirect(url_for('get_users'))
 
+@app.route('/users/<id>')
+def edit_user(id):
+    dbconnection.sqlite_connection.init_app(app)
+    cursor = dbconnection.sqlite_connection.get_cursor()
+    cursor.execute('''SELECT * FROM Users WHERE Id = ? ''', (id,))
+    row = cursor.fetchone()
+    user = {"id":row[0], "username":row[1], "password":row[2], "firstname":row[3], "lastname":row[4]}
+    dbconnection.sqlite_connection.commit()
+    dbconnection.sqlite_connection.close_connection()
+    return render_template('user.html', user = user)
 
 if __name__ == '__main__':
     app.run(debug = True)

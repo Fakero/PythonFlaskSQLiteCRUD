@@ -1,0 +1,18 @@
+<!doctype html>
+<head>
+    <script src="http://code.jquery.com/jquery-1.11.1.js"></script>
+</head>
+<html>
+    <body>
+        <div>
+            <form action="/users/update" method="POST">
+                <p>ID <input type="number" disabled="true" value="{{ user['id'] }}"/></p>
+                <p>Username <input type="text" id="username" value="{{ user['username'] }}"/></p>
+                <p>Password <input type="text" id="password" value="{{ user['password'] }}"/></p>
+                <p>First name <input type="text" id="firstname" value="{{ user['firstname'] }}"/></p>
+                <p>Last name <input type="text" id="lastname" value="{{ user['lastname'] }}"/></p>
+                <input type="submit" value="Save">
+            </form>
+        </div>
+    </body>
+</html>
