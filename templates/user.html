@@ -1,18 +1,29 @@
 <!doctype html>
 <head>
-    <script src="http://code.jquery.com/jquery-1.11.1.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <style>
+        form { margin: 10px 10px 10px 10px; }
+    </style>
 </head>
 <html>
     <body>
-        <div>
-            <form action="/users/update" method="POST">
-                <p>ID <input type="number" disabled="true" value="{{ user['id'] }}"/></p>
-                <p>Username <input type="text" id="username" value="{{ user['username'] }}"/></p>
-                <p>Password <input type="text" id="password" value="{{ user['password'] }}"/></p>
-                <p>First name <input type="text" id="firstname" value="{{ user['firstname'] }}"/></p>
-                <p>Last name <input type="text" id="lastname" value="{{ user['lastname'] }}"/></p>
-                <input type="submit" value="Save">
+        <div class="container-fluid text-right">
+            <div class="col-sm-4">
+            </div>
+            <div class="col-sm-3 text-right">
+            <form action="{{ url_for('update_user') }}" method="POST">
+                <p>ID <input type="number" name="id" value="{{ user['id'] }}" readonly></p>
+                <p>Username <input type="text" name="username" value="{{ user['username'] }}" required></p>
+                <p>Password <input type="text" name="password" value="{{ user['password'] }}" required></p>
+                <p>First name <input type="text" name="firstname" value="{{ user['firstname'] }}" required></p>
+                <p>Last name <input type="text" name="lastname" value="{{ user['lastname'] }}" required></p>
+                <input type="submit" class="btn btn-success" value="Save">
+                <a class="btn btn-primary" href="{{ url_for('get_users') }}">Cancel</a>
+                <input type="submit" formaction="{{ url_for('delete_user') }}" class="btn btn-danger" value="Delete">
             </form>
+            </div>
+            <div class="col-sm-5">
+            </div>
         </div>
     </body>
 </html>
